@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script type="text/javascript" src = "./js/vue.js"></script>
+		<style type="text/css">
+			#div1{
+				height:200px;
+				background-color: orange;
+			}
+			#div2{
+				height:400px;
+				width: 400px;
+				background-color: blue;
+			}
+			#div3{
+				height:200px;
+				width:200px;
+				background-color: aqua;
+			}
+			#div4{
+				height:100px;
+				background-color:greenyellow;
+			}
+			ul{
+				height:300px;
+				width:200px;
+				background-color: antiquewhite;
+				overflow: auto;
+			}
+			li{
+				height:200px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="root">
+			<p>我是一个{{job}}</p>
+			<button type="button" v-on:click = "showInfo">点击事件</button><br><br>
+			<button type="button" @click = "showInfo2($event,88)">传参的点击事件</button><br><br> <!-- v-on:click可以简写为@click-->
+			<!-- 事件修饰符 -->
+			<!-- a标签的超链接点击后默认行为是跳转到链接所在网址，prevent事件修饰符可以关闭默认行为-->
+			<a href="https://baidu.com"@click.prevent = "showInfo3">老子是一个超链接</a> <br><br>
+			
+			<!-- 点击按钮会产生事件冒泡，触发外层div的事件，使用stop修饰符可以阻止事件冒泡 -->
+			<div id="div1" @click = "showInfo4">
+				<button type="button" @click.stop="showInfo4">阻止冒泡</button>
+			</div><br><br>
+			
+			<!-- 每次点击按钮都会弹窗，如果使用once修饰符，则只有第一次点击有弹窗，后面的点击都没有-->
+			<button type="button" @click.once="showInfo5">点我只会触发一次效果</button>  <br><br>
+			
+			<!-- 正常情况下事件是先捕获再冒泡，并在冒泡阶段触发，但是对外层事件使用capture修饰符，就能时它在捕获阶段就执行 -->
+			<div id="div2" @click.capture = "showInfo4()">
+				<div id="div3" @click = "showInfo5()"></div>
+			</div><br><br>
+			
+			<!-- 正常情况下点击内层按钮，冒泡会触发外层div的事件，但使用self修饰符后，只有当点击的对象是div，才会触发事件，冒泡的event.target是button，并不会触发事件-->
+			<div id="div4" @click.self = "showInfo6"> 
+				<button type="button" @click = "showInfo6">event.target为当前操作的元素才触发事件</button>
+			</div>
+			
+			<!-- passive：事件的默认行为立即执行，无需等待事件的回调函数执行完毕 -->
+			<ul @wheel.passive="showInfo7"> <!-- 在ul中滚动滚轮会触发事件，程序先执行函数，函数执行完后滚动条才下滑,使用passive后，滚动条立即下滑，然后再执行回调函数-->
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+				<li>4</li>
+			</ul>
+			
+			<!-- 键盘事件 keydown和keyup -->
+			<!-- 按键别名,区别于按键名，按键别名是vue为了方便给一些按键定义的别名，使用这些别名修饰键盘事件，则只有当按下这些按键时才触发事件，从而调用响应函数
+			常见的按键别名有enter，delete，space，esc，tab，up，down，left，right-->
+			<input type="text" @keyup.caps-lock = "getKeyCode"/>  <br><br>
+			<!-- 对于没有别名的按键，可以直接使用他们的按键名来制定，通过event.key可以知道按键名，也可以通过event.keyCode知道按键编码，从而直接使用编码来指定按键
+			 值得注意的是，按键名一般是大写开头，如Enter，如果是由多个单词组成的，则使用时要使用短横线命名，如CapsLock写为caps-lock-->
+			<input type="text" @keyup = "showKeyName" /><br><br>
+			
+			<!-- 特殊用法：ctrl，shift，alt，meta(即win键)，这些是系统修饰键，使用起来有些特殊
+			搭配keydown可以正常使用，但搭配keyup使用后，需要按下这些键的同时，再按下其他键，松开其他键后事件才会被触发,还可以加上其他键作为组合键触发-->
+			<input type="text" @keyup.ctrl.q = "getKeyCode" /><br><br>
+			<input type="text" @keyup.ruarua = "getKeyCode" /><br><br> <!-- 使用自定义的别名-->
+		</div><br><br>
+		<hr >
+		<img src="img/事件处理1.png" ><br>
+		<img src="img/事件修饰符.png" ><br>
+		<img src="img/键盘事件.png" ><br>
+		
+		<script type="text/javascript">
+			Vue.config.productionTip = false; //阻止vue在启动时生成生产提示
+			Vue.config.devtools = true;		//启用vue开发者工具
+			Vue.config.keyCodes.ruarua = 13; //Enter键的编码是13，可以这样定义新的别名，这个别名可以在代码中被使用
+			//创建vue实例
+			new Vue({				
+				el:'#root',			
+				data : {			
+					job : "码农"
+				},
+				//methods配置项是专门用于存放事件响应函数的
+				methods : {
+					showInfo(){
+						console.log(this);
+						console.log("what's up, man?");
+					},
+					showInfo2(e,a){
+						console.log("show me a number:" + a);
+					},
+					showInfo3(){
+						alert("hello，world!");
+					},
+					showInfo4(){
+						alert("啊西八！");
+					},
+					showInfo5(){
+						alert("莫挨老子");
+					},
+					showInfo6(){
+						alert("点击按钮无法冒泡触发外层事件，因为使用了self修饰");
+					},
+					showInfo7(){
+						for(let i = 0; i < 5000;i++){
+							console.log("欧拉欧拉！");
+						}
+					},
+					getKeyCode(e){
+						console.log(e.target.value);
+					},
+					showKeyName(e){
+						console.log(e.key, e.keyCode);
+					}
+				}
+			});
+		</script>
+			
+		
+	</body>
+</html>

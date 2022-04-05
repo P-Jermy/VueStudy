@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script type="text/javascript" src = "./js/vue.js"></script>
+		
+	</head>
+	<body>
+		<!-- 模板:一个元素，也可以称为一个容器，它所包含的html代码中，夹杂着vue能识别的语法，我们称它为模板，vue实例找到它，并将它里面的vue语法全部替换为html语法，从而生成页面 -->
+		<div id="root">
+			<h1>Hello,张三,{{name}}</h1>			<!-- 使用vue的插值语法{{ }}，可以读取相关联的vue实例中的data内容，插值语法用于对元素包含的内容进行操作-->
+			<a v-bind:href="url">点我可以跳转到百度</a> <!-- v-bind: 是指令语法，可以简写成一个冒号，指令语法用于对元素的属性进行操作-->
+			<a :href="url">点我可以跳转到百度</a>
+		</div>
+		<img src="img/初识vue.png" ><br>
+		<img src="img/vue模板语法.png">
+		<script type="text/javascript">
+			Vue.config.productionTip = false; //阻止vue在启动时生成生产提示
+			Vue.config.devtools = true;		//启用vue开发者工具
+			//创建vue实例，要使用vue框架都得从这一步开始
+			new Vue({				//new Vue()只传入一个对象做参数，这个对象叫做配置对象
+				el:'#root',			//配置项el代表element，获取这个vue实例相关联的html元素，使用元素选择器作为值
+				data : {			//配置项data，用于存储数据，这些数据供el所指定的元素使用
+					name:'李四',		
+					url:"http://baidu.com"
+				}
+			})
+		</script>
+			
+		
+	</body>
+</html>

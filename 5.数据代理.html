@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script type="text/javascript" src = "./js/vue.js"></script>
+		
+	</head>
+	<body>
+		<div id="root">
+			
+		</div>
+		<img src="img/数据代理.png" ><br>
+		<img src="img/数据代理2.png" ><br>
+		
+		<script type="text/javascript">
+			Vue.config.productionTip = false; //阻止vue在启动时生成生产提示
+			Vue.config.devtools = true;		//启用vue开发者工具
+			//创建vue实例
+			new Vue({				
+				el:'#root',			
+				data : {			
+					
+				}
+			});
+			
+			// 回顾Object.defineProperty()方法
+			let num = 18;
+			const obj = {
+				name : "Jermy",
+				gender : "male"
+			}
+			
+			Object.defineProperty(obj,'age',{				//defineProperty()方法用于定义属性，可传入三个参数：定义的对象，要操作的属性名，配置对象
+				// value : 24,									//value的值就是要操作的属性的值
+				// enumerable : true,							//enumerable用于控制属性值是否可以枚举，或者遍历，默认值是false
+				// writable : true,							//writable用于控制属性值是否可以修改，默认值是false
+				// configurable : true, 						//configurable用于控制属性是否可以删除
+				
+				get(){
+					console.log("属性值被读取了")
+					return num;	//get()方法的返回值即为属性的值，可用于动态的获取属性值
+				},
+				set(value){
+					console.log("属性值被修改了，修改后的值是"+ value); //set()方法在属性值每次被修改时会被调用，并返回修改后的值，但这里对象的属性值并没有被真正修改
+					num = value; //可以通过将属性的值传递给形参，从而真正修改对象的属性值
+				}
+				
+			})
+			
+			/* for( let key in obj){
+				console.log(obj[key]);
+			} */
+			
+			//数据代理的定义：通过一个对象作为代理，对另一个对象中的属性进行操作（读/写)
+			const obj1 = {a:100};
+			const obj2 = {b:200};
+			Object.defineProperty(obj2,"a",{	//通过obj2获取obj1中的内容
+				get(){
+					return obj1.a;
+				},
+				// set(value){
+				// 	value = obj1.a;
+				// }
+			});
+			
+		</script>
+			
+		
+	</body>
+</html>
